@@ -129,7 +129,9 @@ def create_fire_map(
             hoverinfo="skip",
             showlegend=False,
         )
-        fig.update_map(center=dict(lat=hl_lat, lon=hl_lon), zoom=10)
+        fig.update_layout(
+            map=dict(center=dict(lat=hl_lat, lon=hl_lon), zoom=10)
+        )
 
     fig.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
