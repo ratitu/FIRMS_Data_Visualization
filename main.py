@@ -140,6 +140,16 @@ if selections.get("submit"):
 # Main content area
 data = st.session_state.data
 
+# Check for table row selection (from original data dataframe)
+highlight_point = None
+table_sel = st.session_state.get("original_data_table")
+if table_sel and table_sel.get("selection"):
+    sel_rows = table_sel["selection"].get("rows", [])
+    if sel_rows:
+        selected = data.iloc[sel_rows[0]]
+        if "latitude" in selected.index and "longitude" in selected.index:
+            highlight_point = (selected["latitude"], selected["longitude"])
+
 if not data.empty:
     # Map
     st.write("### Fire Events Map")
@@ -151,7 +161,7 @@ if not data.empty:
             selections.get("year_end", 2022),
             selections.get("country_multi", []),
         )
-    display_map(data)
+    display_map(data, highlight_point=highlight_point)
     render_clicked_point(data)
 
     # Date line chart

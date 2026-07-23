@@ -189,9 +189,9 @@ def render_local_sidebar() -> dict:
     }
 
 
-def display_map(data: pd.DataFrame) -> None:
+def display_map(data: pd.DataFrame, highlight_point: tuple[float, float] | None = None) -> None:
     """Display the fire data on an interactive map with hover popups."""
-    fig = create_fire_map(data)
+    fig = create_fire_map(data, highlight_point=highlight_point)
     if fig:
         st.plotly_chart(
             fig,
@@ -207,7 +207,7 @@ def display_original_data_checkbox(data: pd.DataFrame, source_display: str) -> N
     if st.checkbox("Show Original Data", value=False):
         st.write("### Original Data")
         display_source_badge(source_display)
-        st.write(data)
+        st.dataframe(data, on_select="rerun", key="original_data_table")
 
         st.write(
             "[Attribute table for LANDSAT]"

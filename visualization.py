@@ -88,8 +88,15 @@ FIRE_HOVER_COLS = [
 ]
 
 
-def create_fire_map(data: pd.DataFrame) -> Optional[object]:
-    """Create a scatter map with fire data points and hover tooltips."""
+def create_fire_map(
+    data: pd.DataFrame, highlight_point: tuple[float, float] | None = None
+) -> Optional[object]:
+    """Create a scatter map with fire data points and hover tooltips.
+
+    Args:
+        data: DataFrame with latitude/longitude columns.
+        highlight_point: Optional (lat, lon) tuple to zoom to and highlight.
+    """
     if data.empty or "latitude" not in data.columns or "longitude" not in data.columns:
         return None
 
@@ -111,6 +118,18 @@ def create_fire_map(data: pd.DataFrame) -> Optional[object]:
         marker={"size": 5, "opacity": 0.7},
         selector=dict(type="scattermap"),
     )
+
+    if highlight_point is not None:
+        hl_lat, hl_lon = highlight_point
+        fig.add_scattermap(
+            lat=[hl_lat],
+            lon=[hl_lon],
+            mode="markers",
+            marker=dict(size=14, color="lime", opacity=1.0, symbol="star"),
+            hoverinfo="skip",
+            showlegend=False,
+        )
+        fig.update_map(center=dict(lat=hl_lat, lon=hl_lon), zoom=10)
 
     fig.update_layout(
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
